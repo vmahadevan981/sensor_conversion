@@ -1,0 +1,65 @@
+<!-- templates/conversion/index.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sensor Conversion</title>
+</head>
+<body>
+    <h1>Sensor to Output Conversion</h1>
+    <form id="conversionForm">
+        <label for="sensor_min">Sensor Min:</label>
+        <input type="number" id="sensor_min" name="sensor_min" required><br><br>
+
+        <label for="sensor_max">Sensor Max:</label>
+        <input type="number" id="sensor_max" name="sensor_max" required><br><br>
+
+        <label for="output_min">Output Min:</label>
+        <input type="number" id="output_min" name="output_min" required><br><br>
+
+        <label for="output_max">Output Max:</label>
+        <input type="number" id="output_max" name="output_max" required><br><br>
+
+        <label for="value">Sensor Value:</label>
+        <input type="number" id="value" name="value" required><br><br>
+
+        <label for="direction">Direction (sensor_to_output/output_to_sensor):</label>
+        <input type="text" id="direction" name="direction" required><br><br>
+
+        <button type="submit">Submit</button>
+    </form>
+
+    <h2>Converted Value:</h2>
+    <p id="result"></p>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $("#conversionForm").on("submit", function(e) {
+            e.preventDefault();
+
+            let formData = {
+                sensor_min: $("#sensor_min").val(),
+                sensor_max: $("#sensor_max").val(),
+                output_min: $("#output_min").val(),
+                output_max: $("#output_max").val(),
+                value: $("#value").val(),
+                direction: $("#direction").val()
+            };
+
+            $.ajax({
+                url: 'http://127.0.0.1:8000/api/convert/',
+                type: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify(formData),
+                success: function(response) {
+                    $("#result").text("Converted Value: " + response.converted_value);
+                },
+                error: function(xhr, status, error) {
+                    $("#result").text("Error: " + error);
+                }
+            });
+        });
+    </script>
+</body>
+</html>
